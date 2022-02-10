@@ -1,5 +1,4 @@
-service:
-  name: AWS-LAMBDA-KAFKA
+service: AWS-LAMBDA-KAFKA
 
 plugins:
   - serverless-bundle
@@ -9,12 +8,24 @@ provider:
   name: aws
   runtime: nodejs12.x
   memorySize: 256
+  region: sa-east-1
   stage: ${opt:stage, 'dev'}
+  environment:
+    BOOTSTRAP_SERVERS: ${env:BOOTSTRAP_SERVERS}
+    SECURITY_PROTOCOL: ${env:SECURITY_PROTOCOL}
+    SASL_MECHANISMS: ${env:SASL_MECHANISMS}
+    SASL_USERNAME: ${env:SASL_USERNAME}
+    SASL_PASSWORD: ${env:SASL_PASSWORD}
+    SESSION_TIMEOUT: ${env:SESSION_TIMEOUT}
   
 functions:
-  hello:
-    handler: src/handlers/hello.handler
+  getAccess:
+    handler: src/handlers/getAccess.handler
     events:
       - http:
-          method: GET
-          path: /hello
+          method: POST
+          path: /getAccess
+          
+custom:
+  bundle:
+    linting: false
